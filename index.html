@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="./styles/style.css"/>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script type="text/javascript"></script>
+		<script type="text/javascript" src="./scripts/main.js"></script>
 	</head>
 	<body>
 		<div id="header"><img id="ahmctlogo" src="./images/ahmctlogo.png" /> <img id="ucdlogo" src="./images/ucdlogo.png" /></div>
@@ -14,14 +14,18 @@
 			<div id="formInfo">
 				<div id="formHeading">AHMCT Location Coding</div>
 			</div>
-			<div id="uploadFormDiv" class="main-content">
-				<div id="formDescription">
-					Upload single or multiple TCRs to get location codes.
+			<div class="mainContent">
+				<div id="statusDiv"></div>
+				<div id="map"></div><script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdMiuBuuhft5I9Jwal7d14CZWAa9OHNfw&callback=initMap"></script>
+				<div id="generalContent">
+					<div id="formDescription">
+						Upload single or multiple TCRs to get location codes.
+					</div>
+					<form action="" action="POST" id="uploadForm">
+						<input id="fileUpload" type="file" multiple size="500"/> <br/>
+						<input id="submitButton" class="btn btn-default" type="button" value="Upload" onclick="upload()"/>
+					</form>
 				</div>
-				<form action="" action="POST" id="uploadForm">
-					<input id="file-upload" type="file" /> <br/>
-					<input id="submitButton" class="btn btn-default" type="submit" value="Upload" />
-				</form>
 			</div>
 			<div id="formFooter">
 			</div>
@@ -29,12 +33,12 @@
 
 		<div id="footer">
 			<img id="footerlogo" src="./images/footerlogo.png" />
-			<span id="footerdescription">Advanced Highway Maintenance & Construction 		Technology Research Center <br />
+			<div id="footerdescription">Advanced Highway Maintenance & Construction Technology Research Center <br />
 				Department Mechanical and Aerospace Engineering <br />
 				University of California at Davis<br />
 				One Shields Avenue, Davis CA 95616<br /><br />
 				web(at)ahmct.ucdavis.edu<br />
-			</span>
+			</div>
 
 		</div>
 	</body>
