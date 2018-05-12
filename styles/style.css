@@ -53,10 +53,15 @@ body {
 	padding-bottom: 10px;
 }
 
-#uploadFormDiv {
+.main-content {
 	background-color: #D3D3D3;
 	opacity: 0.8;
 	padding: 20px;
+}
+
+#submitButton {
+	height: 30px;
+	padding-top: 5px;
 }
 
 #footer {
@@ -66,10 +71,50 @@ body {
 	font-size: 10px;
 	color: #A9A9A9;
 }
+
 #footerdescription {
 	position: absolute;
 	top: 10px;
 	left: 250px;
 	float: right;
 	width: 500px;
+}
+
+#map {
+	position: absolute;
+    left: 475px;
+	top: 72px;
+	height: 350px;
+	width: 50%;
+}
+
+#locationDiv {
+	position: absolute;
+	top: 180px;
+}
+
+#locationButton {
+	position: absolute;
+	left: 150px;
+}
+
+#updateButton {
+	display: none;
+	position: absolute;
+	left: 170px;
+	top: 350px;
+}
+
+#tcrStatus {
+	width : 400px;
+	background-color: #7B68EE;
+	color: #FFFFFF;
+	padding: 10px;
+	margin-top: 30px;
+	margin-left: 20px;
+	border: 1px solid;
+}
+.location {
+	margin-top: 10px;
+	width: 450px;
 }
