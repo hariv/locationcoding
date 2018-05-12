@@ -58,3 +58,18 @@ body {
 	opacity: 0.8;
 	padding: 20px;
 }
+
+#footer {
+	position: absolute;
+	top: 460px;
+	left: 250px;
+	font-size: 10px;
+	color: #A9A9A9;
+}
+#footerdescription {
+	position: absolute;
+	top: 10px;
+	left: 250px;
+	float: right;
+	width: 500px;
+}
