@@ -1,0 +1,60 @@
+body {
+	background-image: url("../images/bg.jpg");
+	background-repeat: no-repeat;
+	background-color: #1B2733;
+}
+
+#ahmctlogo {
+	position: absolute;
+	top: 100px;
+	left: 250px;
+}
+
+#ucdlogo {
+	position: absolute;
+	top: 100px;
+	right: 300px;
+}
+
+#formInfo {
+	padding-left: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-color: #A9A9A9;
+	opacity: 0.8;
+	color: #FFF;
+	border-top: 1px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+#formFooter {
+	padding-left: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-color: #A9A9A9;
+	opacity: 0.8;
+	color: #FFF;
+	border-bottom: 1px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+#content {
+	position: absolute;
+	top: 230px;
+	width: 1000px;
+	height: 500px;
+	margin-left: 250px;
+	padding-top: 10px;
+}
+
+#formDescription {
+	padding-bottom: 10px;
+}
+
+#uploadFormDiv {
+	background-color: #D3D3D3;
+	opacity: 0.8;
+	padding: 20px;
+}
