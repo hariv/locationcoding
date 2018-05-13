@@ -13,8 +13,8 @@ function initMap(location) {
   });
 }
 
-function upload() {
-  var inputTag = document.getElementById("fileUpload"), files = [];
+function upload(uploadObj) {
+  var inputTag = document.getElementById(uploadObj.type);
   if('files' in inputTag) {
     document.getElementById("statusDiv").style.display = "block";
     if(inputTag.files.length == 0) {
@@ -23,15 +23,21 @@ function upload() {
       footer.style.top = window.getComputedStyle(footer).getPropertyValue('top') + 50;
       return;
     }
+
     document.getElementById("statusDiv").innerHTML = "Processing "+inputTag.files.length+ " file(s)";
     var spinner = document.createElement("img");
     spinner.src = "./images/spinner.gif";
     spinner.height = "20";
     spinner.width = "20";
+
     document.getElementById("statusDiv").appendChild(spinner);
     document.getElementById("generalContent").innerHTML = "";
+
     //makeRequest("fileUpload", inputTag.files);
-    setTimeout(function(){ loadSingleLocation({success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis"});}, 1000);
+    if(uploadObj.type == "folderUpload")
+      setTimeout(function(){ loadList({successLength: 5, faliureLength: 0, locations:[{success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis"}, {success: true, fileName: "2.pdf", accuracy: 0.92, location: "Academic Surge UC Davis"}, {success: true, fileName: "3.pdf", accuracy: 0.95, location: "Wellman Hall UC Davis"}, {success: true, fileName: "4.pdf", accuracy: 0.91, location: "Watershed Sciences UC Davis"}, {success: true, fileName: "5.pdf", accuracy: 0.97, location: "320 K Street Davis"}]});}, 1000);
+    else
+      setTimeout(function(){ loadSingleLocation({success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis"});}, 1000);
   }
 }
 
@@ -45,8 +51,19 @@ function loadSingleLocation(locationObject) {
     document.getElementsByClassName("location")[0].value = locationObject.location;
     addMarker(locationObject.location);
   }
+  else
+    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.fileName + " failed. Please enter the location below.";
 }
 
+function loadList(locationsObject) {
+  var generalContent = document.getElementById("generalContent");
+  document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed.";
+  var newContent = "<table class='table table-striped'><tr><th>File Name</th><th>Location</th><th>Accuracy</th><th></th></tr>";
+  for(var i = 0; i<locationsObject.locations.length; i++)
+    newContent += "<tr><td>"+locationsObject.locations[i].fileName+"</td><td>"+locationsObject.locations[i].location+"</td><td>"+locationsObject.locations[i].accuracy+"</td><td><button class='btn btn-danger'>X</button></td></tr>";
+  newContent += "</table>";
+  generalContent.innerHTML = newContent;
+}
 
 function addMarker(location) {
   var locationGeocoder = new google.maps.Geocoder(), position, marker;
@@ -56,7 +73,7 @@ function addMarker(location) {
       position: position,
       label: {
         text: location,
-        color: '#A9A9A9'
+        color: '#7B68EE'
       },
       map: map
     });

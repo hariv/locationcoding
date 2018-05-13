@@ -72,6 +72,12 @@ body {
 	width: 940px;
 }
 
+#formFolderDescription {
+	margin-top: 25px;
+	margin-bottom: 10px;
+	width: 940px;
+}
+
 #map {
 	display: none;
 	height: 150px;
@@ -110,4 +116,8 @@ body {
 .location {
 	margin-top: 10px;
 	width: 450px;
+}
+
+table, th, td {
+    border: 1px solid black;
 }

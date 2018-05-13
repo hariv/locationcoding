@@ -23,7 +23,15 @@
 					</div>
 					<form action="" action="POST" id="uploadForm">
 						<input id="fileUpload" type="file" multiple size="500"/> <br/>
-						<input id="submitButton" class="btn btn-default" type="button" value="Upload" onclick="upload()"/>
+						<input id="submitButton" class="btn btn-default" type="button" value="Upload" onclick="upload({type: 'fileUpload'})"/>
+					</form>
+					<hr />
+					<div id="formFolderDescription">
+						Upload folder containing TCRs to get location codes.
+					</div>
+					<form action="" action="POST" id="uploadFolder">
+						<input id="folderUpload" type="file" webkitdirectory mozdirectory/> <br/>
+						<input id="submitFolderButton" class="btn btn-default" type="button" value="Upload" onclick="upload({type: 'folderUpload'})"/>
 					</form>
 				</div>
 			</div>
