@@ -41,10 +41,17 @@ function upload(uploadObj) {
   }
 }
 
-function loadSingleLocation(locationObject) {
+function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "block";
-  generalContent.innerHTML = '<div id="locationDiv"><input type="text" class="location form-control" placeholder="Enter location" /><br /><input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" /></div><input type="button" id="updateButton" value="Update!" class="btn btn-default" onclick="update()" /></div>';
+  generalContent.innerHTML = '<div id="locationDiv"><input type="text" class="location form-control" placeholder="Enter location" /><input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" /></div><input type="button" id="updateButton" value="Update!" class="btn btn-default" onclick="update()" /></div>';
+  document.getElementsByClassName("mainContent")[0].style.height = "750px";
+
+  if(locationsArray != undefined)
+    generalContent.innerHTML += "<span onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
+  
+  console.log(locationsArray);
+
   if(locationObject.success == true) {
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.fileName + " succeeded, with accuracy " + locationObject.accuracy +". View or modify the location below."
     initMap(locationObject.location);
@@ -57,10 +64,14 @@ function loadSingleLocation(locationObject) {
 
 function loadList(locationsObject) {
   var generalContent = document.getElementById("generalContent");
-  document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed.";
-  var newContent = "<table class='table table-striped'><tr><th>File Name</th><th>Location</th><th>Accuracy</th><th></th></tr>";
-  for(var i = 0; i<locationsObject.locations.length; i++)
-    newContent += "<tr><td>"+locationsObject.locations[i].fileName+"</td><td>"+locationsObject.locations[i].location+"</td><td>"+locationsObject.locations[i].accuracy+"</td><td><button class='btn btn-danger'>X</button></td></tr>";
+  document.getElementById("map").style.display = "none";
+  document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";  
+  var newContent = "<table class='table table-striped'><tr><th>File Name</th><th>Location</th><th>Accuracy</th><th>Status</th><th></th></tr>";
+  
+  for(var i = 0; i<locationsObject.locations.length; i++) {
+    var locationObject = locationsObject.locations[i], statusMessage = locationObject.success ? "Success" : "Failed";
+    newContent += "<tr ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.fileName+"</td><td>"+locationObject.location+"</td><td>"+locationObject.accuracy+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton'>X</button></td></tr>";
+  }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
 }
