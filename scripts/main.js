@@ -48,7 +48,7 @@ function loadSingleLocation(locationObject, locationsArray) {
   document.getElementsByClassName("mainContent")[0].style.height = "750px";
 
   if(locationsArray != undefined)
-    generalContent.innerHTML += "<span onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
+    generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
   
   console.log(locationsArray);
 
