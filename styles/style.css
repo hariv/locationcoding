@@ -96,7 +96,7 @@ body {
 
 #updateButton {
 	display: none;
-	margin-left: 420px;
+	margin-left: 190px;
 	margin-top: 20px;
 }
 
@@ -121,4 +121,15 @@ body {
 
 table, th, td {
     border: 1px solid black;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+ul#collisionDataMenu li {
+	display: inline;
+	list-style-type: none;
+}
+
+#collisionData {
+	width: 250px;
 }
