@@ -62,9 +62,8 @@ function showEditPage(editItemId) {
   editField.setAttribute("type", "text");
   editField.id = editItemId+"edit";
   editField.setAttribute("class", "form-control");
-  editField.setAttribute("placeholder", content);
+  editField.setAttribute("value", content);
   editField.setAttribute("onkeydown", "handleKeyDown(event,'"+editItemId+"')");
-  //editField.onkeydown = handleKeyDown(this.id);
   editItem.appendChild(editField);
   document.getElementById("updateButton").style.display = "block";
 }
@@ -109,8 +108,7 @@ function loadSingleLocation(locationObject, locationsArray) {
     </div>`;
 
   generalContent.innerHTML = markup;
-  //generalContent.innerHTML = '<div id="locationDiv"><input type="text" class="location form-control" placeholder="Enter location" /><input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" /></div><input type="button" id="updateButton" value="Update!" class="btn btn-default" onclick="update()" /></div>';
-  document.getElementsByClassName("mainContent")[0].style.height = "1050px";
+  document.getElementsByClassName("mainContent")[0].style.height = "1070px";
 
   if(locationsArray != undefined)
     generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
