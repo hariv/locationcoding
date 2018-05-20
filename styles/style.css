@@ -133,3 +133,11 @@ ul#collisionDataMenu li {
 #collisionData {
 	width: 250px;
 }
+
+.row-1 {
+	background-color: #F8F8FF
+}
+
+.row-0 {
+	background-color: #F0FFF0;
+}

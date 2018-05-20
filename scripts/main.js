@@ -41,18 +41,24 @@ function upload(uploadObj) {
   }
 }
 
+function show(entity) {
+  return entity == undefined ? "" : entity;
+}
+
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "block";
-  
-  const markup = `
-  <div id="partyData">
-  <h4>PARTY DATA</h4>
-  </div>
+  var markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table table-striped'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
+  for(var i = 0; i<locationObject.partyData.length; i++) {
+    var partyObject = locationObject.partyData[i];
+    markup += "<tr class='row-"+(i%2)+"'><td>"+partyObject.party+"</td><td>"+show(partyObject.primaryObject)+"</td><td>"+show(partyObject.loc)+"</td><td>"+show(partyObject.otherObject1)+"</td><td>"+show(partyObject.loc1)+"</td><td>"+show(partyObject.otherObject2)+"</td><td>"+show(partyObject.loc2)+"</td><td>"+show(partyObject.otherObject3)+"</td><td>"+show(partyObject.loc3)+"</td><td>"+show(partyObject.vehHwyIndicator)+"</td><td>"+show(partyObject.partyType)+"</td><td>"+show(partyObject.movement)+"</td><td>"+show(partyObject.direction)+"</td></tr>";
+  }
+
+  markup += `</table></div>
   <div id="collisionData">
     <h4>COLLISION DATA</h4>
-    <table id="collisionDataTable"><tr><th>REPORT #</th><th>Collision Date</th><th>Collision Type</th><th>NCIC</th><th>Officer ID</th><th>Assigned To</th><th>SOE Status</th><th>Location</th><th>District</th><th>County</th><th>Route</th><th>Route Suffix</th><th>PM Prefix</th><th>Postmile</th><th>R/L</th><th>Side of Hwy</th><th>I/R</th></tr>
-    <tr><td>${locationObject.reportId != undefined ? locationObject.reportId : ""}</td>
+    <table id="collisionDataTable" class="row-1"><tr><th>REPORT #</th><th>Collision Date</th><th>Collision Type</th><th>NCIC</th><th>Officer ID</th><th>Assigned To</th><th>SOE Status</th><th>Location</th><th>District</th><th>County</th><th>Route</th><th>Route Suffix</th><th>PM Prefix</th><th>Postmile</th><th>R/L</th><th>Side of Hwy</th><th>I/R</th></tr>
+    <tr class="row-0"><td>${locationObject.reportId != undefined ? locationObject.reportId : ""}</td>
     <td>${locationObject.collisionDate != undefined ? locationObject.collisionDate : ""}</td>
     <td>${locationObject.collisionType != undefined ? locationObject.collisionType :""}</td>
     <td>${locationObject.ncic != undefined ? locationObject.ncic : ""}</td>
@@ -80,12 +86,10 @@ function loadSingleLocation(locationObject, locationsArray) {
 
   generalContent.innerHTML = markup;
   //generalContent.innerHTML = '<div id="locationDiv"><input type="text" class="location form-control" placeholder="Enter location" /><input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" /></div><input type="button" id="updateButton" value="Update!" class="btn btn-default" onclick="update()" /></div>';
-  document.getElementsByClassName("mainContent")[0].style.height = "850px";
+  document.getElementsByClassName("mainContent")[0].style.height = "1050px";
 
   if(locationsArray != undefined)
     generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
-  
-  console.log(locationsArray);
 
   if(locationObject.success == true) {
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.fileName + " succeeded, with accuracy " + locationObject.accuracy +". View or modify the location below."
@@ -101,11 +105,11 @@ function loadList(locationsObject) {
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "none";
   document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";  
-  var newContent = "<table class='table table-striped'><tr><th>File Name</th><th>Location</th><th>Accuracy</th><th>Status</th><th></th></tr>";
+  var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Accuracy</th><th>Status</th><th></th></tr>";
   
   for(var i = 0; i<locationsObject.locations.length; i++) {
     var locationObject = locationsObject.locations[i], statusMessage = locationObject.success ? "Success" : "Failed";
-    newContent += "<tr ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.fileName+"</td><td>"+locationObject.location+"</td><td>"+locationObject.accuracy+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton'>X</button></td></tr>";
+    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.fileName+"</td><td>"+locationObject.location+"</td><td>"+locationObject.accuracy+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton'>X</button></td></tr>";
   }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
