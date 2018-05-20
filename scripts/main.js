@@ -35,7 +35,7 @@ function upload(uploadObj) {
 
     //makeRequest("fileUpload", inputTag.files);
     if(uploadObj.type == "folderUpload")
-      setTimeout(function(){ loadList({successLength: 5, faliureLength: 0, locations:[{success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis"}, {success: true, fileName: "2.pdf", accuracy: 0.92, location: "Academic Surge UC Davis"}, {success: true, fileName: "3.pdf", accuracy: 0.95, location: "Wellman Hall UC Davis"}, {success: true, fileName: "4.pdf", accuracy: 0.91, location: "Watershed Sciences UC Davis"}, {success: true, fileName: "5.pdf", accuracy: 0.97, location: "320 K Street Davis"}]});}, 1000);
+      setTimeout(function(){ loadList({successLength: 5, faliureLength: 0, locations:[{success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "2.pdf", accuracy: 0.92, location: "Academic Surge UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "3.pdf", accuracy: 0.95, location: "Wellman Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "4.pdf", accuracy: 0.91, location: "Watershed Sciences UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "5.pdf", accuracy: 0.97, location: "320 K Street Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}]});}, 1000);
     else
       setTimeout(function(){ loadSingleLocation({success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]});}, 1000);
   }
@@ -45,13 +45,37 @@ function show(entity) {
   return entity == undefined ? "" : entity;
 }
 
+function handleKeyDown(event, editItemId) {
+  if(event.keyCode == 13) {
+    var ip = document.getElementById(editItemId+"edit").value;
+    var element = document.getElementById(editItemId);
+    element.innerHTML = ip;
+  }
+  return;
+}
+
+function showEditPage(editItemId) {
+  var editItem = document.getElementById(editItemId);
+  var content = editItem.innerHTML;
+  editItem.innerHTML = "";
+  var editField = document.createElement("input");
+  editField.setAttribute("type", "text");
+  editField.id = editItemId+"edit";
+  editField.setAttribute("class", "form-control");
+  editField.setAttribute("placeholder", content);
+  editField.setAttribute("onkeydown", "handleKeyDown(event,'"+editItemId+"')");
+  //editField.onkeydown = handleKeyDown(this.id);
+  editItem.appendChild(editField);
+  document.getElementById("updateButton").style.display = "block";
+}
+
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "block";
   var markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table table-striped'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
   for(var i = 0; i<locationObject.partyData.length; i++) {
     var partyObject = locationObject.partyData[i];
-    markup += "<tr class='row-"+(i%2)+"'><td>"+partyObject.party+"</td><td>"+show(partyObject.primaryObject)+"</td><td>"+show(partyObject.loc)+"</td><td>"+show(partyObject.otherObject1)+"</td><td>"+show(partyObject.loc1)+"</td><td>"+show(partyObject.otherObject2)+"</td><td>"+show(partyObject.loc2)+"</td><td>"+show(partyObject.otherObject3)+"</td><td>"+show(partyObject.loc3)+"</td><td>"+show(partyObject.vehHwyIndicator)+"</td><td>"+show(partyObject.partyType)+"</td><td>"+show(partyObject.movement)+"</td><td>"+show(partyObject.direction)+"</td></tr>";
+    markup += "<tr class='row-"+(i%2)+"'><td id='party-"+i+"' ondblclick='showEditPage(this.id)'>"+partyObject.party+"</td><td id='primaryObject-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.primaryObject)+"</td><td id='loc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.loc)+"</td><td id='firstOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.otherObject1)+"</td><td id='firstLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.loc1)+"</td><td id='secondOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.otherObject2)+"</td><td id='secondLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.loc2)+"</td><td id='thirdOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.otherObject3)+"</td><td id='thirdLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.loc3)+"</td><td id='hwyIndicator-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.vehHwyIndicator)+"</td><td id='partyType-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.partyType)+"</td><td id='movement-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.movement)+"</td><td id='direction-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.direction)+"</td></tr>";
   }
 
   markup += `</table></div>
