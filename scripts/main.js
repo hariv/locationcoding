@@ -13,20 +13,38 @@ function initMap(location) {
   });
 }
 
-function makeRequest(formData) {
+function poll(batchId) {
+  console.log("polling..");
+  makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
+    if(response.numTcrs == response.numProcessed)
+      if(response.tcrResults.length == 1)
+        console.log("Load single location");
+      else
+        console.log("Load multiple location");
+    else
+      setTimeout(function(){ poll(batchId); }, 1000);
+  });
+}
+
+function makeRequest(requestType, endpoint, data, callback) {
   var xhr = new XMLHttpRequest();
-  console.log("inside make request");
-  console.log("formdata");
-  console.log(formData);
-  xhr.open('POST', 'http://169.237.117.27:8005/tcrservlets/batchSubmit', true);
+  var url = "http://169.237.117.27:8005/tcrservlets/"+endpoint;
+
+  xhr.open(requestType, url, true);
+  
   xhr.onreadystatechange = function() {
-    console.log("readystate changed");
     if(this.readyState == 4 && this.status == 200) {
-      var response = JSON.parse(this.respo);
-      console.log(response);
+      var response = JSON.parse(this.responseText);
+      if(endpoint == "batchSubmit")
+        poll(response.batchId);
+      else
+        callback(response);
     }
   }
-  xhr.send(formData);
+  if(data != undefined)
+    xhr.send(data);
+  else
+    xhr.send();
 }
 
 function upload(uploadObj) {
@@ -51,9 +69,9 @@ function upload(uploadObj) {
 
     var formData = new FormData(), i;
     for(i=0;i<inputTag.files.length;i++)
-      formData.append('files[]', inputTag.files[i]);
+      formData.append('tcrfiles', inputTag.files[i]);
     
-    makeRequest(formData);
+    makeRequest("POST","batchSubmit",formData,null);
     /*if(uploadObj.type == "folderUpload")
       //setTimeout(function(){ loadList({successLength: 5, faliureLength: 0, locations:[{success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "2.pdf", accuracy: 0.92, location: "Academic Surge UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "3.pdf", accuracy: 0.95, location: "Wellman Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "4.pdf", accuracy: 0.91, location: "Watershed Sciences UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "5.pdf", accuracy: 0.97, location: "320 K Street Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}]});}, 1000);
     else
