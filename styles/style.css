@@ -23,6 +23,7 @@ body {
 	border-top: 1px;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
+	width: 1050px;
 }
 
 #formFooter {
@@ -52,6 +53,7 @@ body {
 	background-color: #D3D3D3;
 	opacity: 0.8;
 	padding: 20px;
+	width: 1050px;
 }
 
 #submitButton {
