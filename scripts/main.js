@@ -201,8 +201,13 @@ function loadList(locationsObject) {
 
 function addMarker(location) {
   console.log("Marker");
+  console.log(location);
+  console.log("Map");
+  console.log(map);
+  var position, marker;
+  var position = {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)};
   var marker = new google.maps.Marker({
-    position: {lat: parseFloat(location.latitide), lng: parseFloat(location.longitude)},
+    position: position,
     label: {
       text: toString(location.postmileValue),
       color: '#7B68EE'
