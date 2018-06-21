@@ -1,11 +1,6 @@
 var origin, map;
 
 function initMap(location) {
-  /*var mapOptions = {
-    zoom: 14,
-    center: new google.maps.LatLng(location.latitude, location.longitude)
-  }
-  map = new google.maps.Map(document.getElementById('map'), mapOptions);*/
   if(!location) {
     location = "Academic Surge UC Davis"
     geocoder = new google.maps.Geocoder();
@@ -33,9 +28,9 @@ function poll(batchId) {
   console.log("polling..");
   makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
     console.log(response);
-    if(response.numTcrs == response.numProcessed) {
+    if(response.tcrResults && response.numTcrs == response.tcrResults.length) {
       if(response.numProcessed == 1)
-        loadSingleLocation(response);
+        loadSingleLocation(response.tcrResults[0]);
       else
         loadList(response);
     }
@@ -128,10 +123,10 @@ function showEditPage(editItemId) {
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
   document.getElementById("map").style.display = "block";
-  if(locationObject.tcrResults[0].partyData) {
+  if(locationObject.partyData) {
     markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
-    for(var i = 0; i<locationObject.tcrResults[0].partyData.length; i++) {
-      var partyObject = locationObject.tcrResults[0].partyData[i];
+    for(var i = 0; i<locationObject.partyData.length; i++) {
+      var partyObject = locationObject.partyData[i];
       markup += "<tr class='row-"+(i%2)+"'><td id='party-"+i+"' ondblclick='showEditPage(this.id)'>"+partyObject.partyNumber+"</td><td id='primaryObject-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.primaryObject)+"</td><td id='loc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.primaryLoc)+"</td><td id='firstOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other1Object)+"</td><td id='firstLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other1Loc)+"</td><td id='secondOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other2Object)+"</td><td id='secondLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other2Loc)+"</td><td id='thirdOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other3Object)+"</td><td id='thirdLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other3Loc)+"</td><td id='hwyIndicator-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.vhi)+"</td><td id='partyType-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.partyType)+"</td><td id='movement-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.movement)+"</td><td id='direction-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.direction)+"</td></tr>";
     }
     markup += `</table></div>`;
@@ -139,23 +134,23 @@ function loadSingleLocation(locationObject, locationsArray) {
   markup += `<div id="collisionData">
         <h4>COLLISION DATA</h4>
         <table id="collisionDataTable" class="row-1"><tr><th>REPORT #</th><th>Collision Date</th><th>Collision Type</th><th>NCIC</th><th>Officer ID</th><th>Assigned To</th><th>SOE Status</th><th>Location</th><th>District</th><th>County</th><th>Route</th><th>Route Suffix</th><th>PM Prefix</th><th>Postmile</th><th>R/L</th><th>Side of Hwy</th><th>I/R</th></tr>
-          <tr class="row-0"><td>${locationObject.tcrResults[0].collisionData.reportNumber != undefined ? locationObject.tcrResults[0].collisionData.reportNumber : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.collisionDate != undefined ? locationObject.tcrResults[0].collisionData.collisionDate : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.collisionType != undefined ? locationObject.tcrResults[0].collisionData.collisionType :""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.ncic != undefined ? locationObject.tcrResults[0].collisionData.ncic : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.officerId != undefined ? locationObject.tcrResults[0].collisionData.officerId : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.assignedTo != undefined ? locationObject.tcrResults[0].collisionData.assignedTo : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.soeStatus != undefined ? locationObject.tcrResults[0].collisionData.soeStatus : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.locationCode != undefined ? locationObject.tcrResults[0].collisionData.location : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.district != undefined ? locationObject.tcrResults[0].collisionData.district : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.county != undefined ? locationObject.tcrResults[0].collisionData.county : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.route != undefined ? locationObject.tcrResults[0].collisionData.route : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.routeSuffix != undefined ? locationObject.tcrResults[0].collisionData.routeSuffix : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.postmilePrefix != undefined ? locationObject.tcrResults[0].collisionData.postmilePrefix : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.postmileValue != undefined ? locationObject.tcrResults[0].collisionData.postmileValue : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.rl != undefined ? locationObject.tcrResults[0].collisionData.rl : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.sideOfHighway != undefined ? locationObject.tcrResults[0].collisionData.sideOfHighway : ""}</td>
-          <td>${locationObject.tcrResults[0].collisionData.ir != undefined ? locationObject.tcrResults[0].collisionData.ir : ""}</td></tr>
+          <tr class="row-0"><td>${locationObject.collisionData.reportNumber != undefined ? locationObject.collisionData.reportNumber : ""}</td>
+          <td>${locationObject.collisionData.collisionDate != undefined ? locationObject.collisionData.collisionDate : ""}</td>
+          <td>${locationObject.collisionData.collisionType != undefined ? locationObject.collisionData.collisionType :""}</td>
+          <td>${locationObject.collisionData.ncic != undefined ? locationObject.collisionData.ncic : ""}</td>
+          <td>${locationObject.collisionData.officerId != undefined ? locationObject.collisionData.officerId : ""}</td>
+          <td>${locationObject.collisionData.assignedTo != undefined ? locationObject.collisionData.assignedTo : ""}</td>
+          <td>${locationObject.collisionData.soeStatus != undefined ? locationObject.collisionData.soeStatus : ""}</td>
+          <td>${locationObject.collisionData.locationCode != undefined ? locationObject.collisionData.location : ""}</td>
+          <td>${locationObject.collisionData.district != undefined ? locationObject.collisionData.district : ""}</td>
+          <td>${locationObject.collisionData.county != undefined ? locationObject.collisionData.county : ""}</td>
+          <td>${locationObject.collisionData.route != undefined ? locationObject.collisionData.route : ""}</td>
+          <td>${locationObject.collisionData.routeSuffix != undefined ? locationObject.collisionData.routeSuffix : ""}</td>
+          <td>${locationObject.collisionData.postmilePrefix != undefined ? locationObject.collisionData.postmilePrefix : ""}</td>
+          <td>${locationObject.collisionData.postmileValue != undefined ? locationObject.collisionData.postmileValue : ""}</td>
+          <td>${locationObject.collisionData.rl != undefined ? locationObject.collisionData.rl : ""}</td>
+          <td>${locationObject.collisionData.sideOfHighway != undefined ? locationObject.collisionData.sideOfHighway : ""}</td>
+          <td>${locationObject.collisionData.ir != undefined ? locationObject.collisionData.ir : ""}</td></tr>
         </table>
       </div>`;
   markup += `<div id="locationDiv">
@@ -171,19 +166,19 @@ function loadSingleLocation(locationObject, locationsArray) {
     generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
 
   if(!locationObject.success) {
-    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.tcrResults[0].collisionData.reporNumber + " succeeded, with accuracy 0.99. View or modify the location below.";
-    initMap(locationObject.tcrResults[0].collisionData);
-    document.getElementsByClassName("location")[0].value = locationObject.tcrResults[0].collisionData.postmileValue;
-    addMarker(locationObject.tcrResults[0].collisionData);
+    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " succeeded, with accuracy 0.99. View or modify the location below.";
+    initMap(locationObject.collisionData);
+    document.getElementsByClassName("location")[0].value = locationObject.collisionData.postmileValue;
+    addMarker(locationObject.collisionData);
   }
   else
-    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.fileName + " failed. Please enter the location below.";
+    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " failed. Please enter the location below.";
 }
 
 function loadList(locationsObject) {
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "none";
-  //document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";  
+  //document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";
   document.getElementById("statusDiv").innerHTML = "Double click row to view/edit location.";
   var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Accuracy</th><th>Status</th><th></th></tr>";
   
@@ -200,32 +195,16 @@ function loadList(locationsObject) {
 }
 
 function addMarker(location) {
-  console.log("Marker");
-  console.log(location);
-  console.log("Map");
-  console.log(map);
   var position, marker;
   var position = {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)};
   var marker = new google.maps.Marker({
     position: position,
     label: {
-      text: toString(location.postmileValue),
+      text: location.postmileValue,
       color: '#7B68EE'
     },
     map: map
   });
-  /*var locationGeocoder = new google.maps.Geocoder(), position, marker;
-  locationGeocoder.geocode({"address": location}, function(result) {
-    position = {lat: result[0].geometry.location.lat(), lng: result[0].geometry.location.lng()};
-    marker = new google.maps.Marker({
-      position: position,
-      label: {
-        text: location,
-        color: '#7B68EE'
-      },
-      map: map
-    });
-  });*/
 }
 
 function visualize() {
