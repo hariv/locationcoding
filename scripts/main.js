@@ -13,8 +13,6 @@ function initMap(location) {
     });
   }
   else {
-    console.log(location.latitude);
-    console.log(location.longitude);
     var mapOptions = {
       zoom: 14,
       center: new google.maps.LatLng(location.latitude, location.longitude)
@@ -184,8 +182,6 @@ function loadList(locationsObject) {
   
   for(var i = 0; i<locationsObject.tcrResults.length; i++) {
     var locationObject = locationsObject.tcrResults[i];
-    console.log(i);
-    console.log(locationObject);
     var statusMessage = locationObject.success ? "Failed" : "Success";
     //var locationObject = locationsObject.locations[i], 
     newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton'>X</button></td></tr>";
