@@ -25,7 +25,6 @@ function initMap(location) {
 function poll(batchId) {
   console.log("polling..");
   makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
-    console.log(response);
     if(response.tcrResults && response.numTcrs == response.tcrResults.length) {
       if(response.numProcessed == 1)
         loadSingleLocation(response.tcrResults[0]);
@@ -118,6 +117,17 @@ function showEditPage(editItemId) {
   document.getElementById("updateButton").style.display = "block";
 }
 
+function delete(locationObject, locationsArray) {
+  var deleteIndex = locationsArray.findIndex(x => x.collisionData.reportNumber == locationObject.collisionData.reportNumber);
+  locationsArray.splice(deleteIndex, 1);
+  makeRequest("DELETE", "delete", locationsArray, function(response){
+    if(response.error) {
+      document.getElementById("statusDiv").innerHTML = "Unable to delete report " + locationObject.collisionData.reportNumber ". Please try again later";
+      return;
+    }
+    loadList(locationsArray, "Successfully deleted "+locationObject.collisionData.reportNumber);
+  });
+}
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
   document.getElementById("map").style.display = "block";
@@ -173,18 +183,22 @@ function loadSingleLocation(locationObject, locationsArray) {
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " failed. Please enter the location below.";
 }
 
-function loadList(locationsObject) {
+function loadList(locationsObject, message) {
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "none";
   //document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";
-  document.getElementById("statusDiv").innerHTML = "Double click row to view/edit location.";
+  if(!message)
+    document.getElementById("statusDiv").innerHTML = "Double click row to view/edit location.";
+  else
+    document.getElementById("statusDiv").innerHTML = message;
+  
   var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Accuracy</th><th>Status</th><th></th></tr>";
   
   for(var i = 0; i<locationsObject.tcrResults.length; i++) {
     var locationObject = locationsObject.tcrResults[i];
     var statusMessage = locationObject.success ? "Failed" : "Success";
     //var locationObject = locationsObject.locations[i], 
-    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton'>X</button></td></tr>";
+    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' onclick=loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'>X</button></td></tr>";
   }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
