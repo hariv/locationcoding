@@ -184,6 +184,7 @@ function loadSingleLocation(locationObject, locationsArray) {
 }
 
 function loadList(locationsObject, message) {
+  console.log("listing");
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "none";
   //document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";
@@ -191,7 +192,7 @@ function loadList(locationsObject, message) {
     document.getElementById("statusDiv").innerHTML = "Double click row to view/edit location.";
   else
     document.getElementById("statusDiv").innerHTML = message;
-  
+
   var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Accuracy</th><th>Status</th><th></th></tr>";
   
   for(var i = 0; i<locationsObject.tcrResults.length; i++) {
