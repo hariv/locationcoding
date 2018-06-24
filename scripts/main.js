@@ -128,6 +128,11 @@ function delete(locationObject, locationsArray) {
     loadList(locationsArray, "Successfully deleted "+locationObject.collisionData.reportNumber);
   });
 }
+
+/*function openDeleteDialog(locationObject, locationsArray) {
+
+}*/
+
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
   document.getElementById("map").style.display = "block";
@@ -199,7 +204,7 @@ function loadList(locationsObject, message) {
     var locationObject = locationsObject.tcrResults[i];
     var statusMessage = locationObject.success ? "Failed" : "Success";
     //var locationObject = locationsObject.locations[i], 
-    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' onclick=loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'>X</button></td></tr>";
+    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
   }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
