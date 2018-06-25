@@ -27,6 +27,7 @@ function initMap(location) {
 function poll(batchId) {
   console.log("polling..");
   makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
+    console.log(response);
     if(response.tcrResults && response.numTcrs == response.tcrResults.length) {
       if(response.numProcessed == 1)
         loadSingleLocation(response.tcrResults[0]);
@@ -125,7 +126,7 @@ function showEditPage(editItemId) {
 }
 
 //Function to delete TCR.
-function delete(locationObject, locationsArray) {
+/*function delete(locationObject, locationsArray) {
   var deleteIndex = locationsArray.findIndex(x => x.collisionData.reportNumber == locationObject.collisionData.reportNumber);
   locationsArray.splice(deleteIndex, 1);
   makeRequest("DELETE", "delete", locationsArray, function(response){
@@ -135,7 +136,7 @@ function delete(locationObject, locationsArray) {
     }
     loadList(locationsArray, "Successfully deleted "+locationObject.collisionData.reportNumber);
   });
-}
+}*/
 
 /*function openDeleteDialog(locationObject, locationsArray) {
 
@@ -187,7 +188,7 @@ function loadSingleLocation(locationObject, locationsArray) {
   if(locationsArray != undefined)
     generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
 
-  if(!locationObject.success) {
+  if(locationObject.success) {
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " succeeded, with accuracy 0.99. View or modify the location below.";
     initMap(locationObject.collisionData);
     document.getElementsByClassName("location")[0].value = locationObject.collisionData.postmileValue;
