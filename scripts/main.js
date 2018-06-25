@@ -153,57 +153,55 @@ function showEditPage(editItemId) {
 //Render single view.
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
-  document.getElementById("map").style.display = "block";
-  if(locationObject.partyData) {
+  if(locationObject.success) {
+    document.getElementById("map").style.display = "block";
     markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
     for(var i = 0; i<locationObject.partyData.length; i++) {
       var partyObject = locationObject.partyData[i];
       markup += "<tr class='row-"+(i%2)+"'><td id='party-"+i+"' ondblclick='showEditPage(this.id)'>"+partyObject.partyNumber+"</td><td id='primaryObject-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.primaryObject)+"</td><td id='loc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.primaryLoc)+"</td><td id='firstOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other1Object)+"</td><td id='firstLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other1Loc)+"</td><td id='secondOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other2Object)+"</td><td id='secondLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other2Loc)+"</td><td id='thirdOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other3Object)+"</td><td id='thirdLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other3Loc)+"</td><td id='hwyIndicator-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.vhi)+"</td><td id='partyType-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.partyType)+"</td><td id='movement-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.movement)+"</td><td id='direction-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.direction)+"</td></tr>";
     }
     markup += `</table></div>`;
-  }
-  markup += `<div id="collisionData">
-        <h4>COLLISION DATA</h4>
-        <table id="collisionDataTable" class="row-1"><tr><th>REPORT #</th><th>Collision Date</th><th>Collision Type</th><th>NCIC</th><th>Officer ID</th><th>Assigned To</th><th>SOE Status</th><th>Location</th><th>District</th><th>County</th><th>Route</th><th>Route Suffix</th><th>PM Prefix</th><th>Postmile</th><th>R/L</th><th>Side of Hwy</th><th>I/R</th></tr>
-          <tr class="row-0"><td>${locationObject.collisionData.reportNumber != undefined ? locationObject.collisionData.reportNumber : ""}</td>
-          <td>${locationObject.collisionData.collisionDate != undefined ? locationObject.collisionData.collisionDate : ""}</td>
-          <td>${locationObject.collisionData.collisionType != undefined ? locationObject.collisionData.collisionType :""}</td>
-          <td>${locationObject.collisionData.ncic != undefined ? locationObject.collisionData.ncic : ""}</td>
-          <td>${locationObject.collisionData.officerId != undefined ? locationObject.collisionData.officerId : ""}</td>
-          <td>${locationObject.collisionData.assignedTo != undefined ? locationObject.collisionData.assignedTo : ""}</td>
-          <td>${locationObject.collisionData.soeStatus != undefined ? locationObject.collisionData.soeStatus : ""}</td>
-          <td>${locationObject.collisionData.locationCode != undefined ? locationObject.collisionData.location : ""}</td>
-          <td>${locationObject.collisionData.district != undefined ? locationObject.collisionData.district : ""}</td>
-          <td>${locationObject.collisionData.county != undefined ? locationObject.collisionData.county : ""}</td>
-          <td>${locationObject.collisionData.route != undefined ? locationObject.collisionData.route : ""}</td>
-          <td>${locationObject.collisionData.routeSuffix != undefined ? locationObject.collisionData.routeSuffix : ""}</td>
-          <td>${locationObject.collisionData.postmilePrefix != undefined ? locationObject.collisionData.postmilePrefix : ""}</td>
-          <td>${locationObject.collisionData.postmileValue != undefined ? locationObject.collisionData.postmileValue : ""}</td>
-          <td>${locationObject.collisionData.rl != undefined ? locationObject.collisionData.rl : ""}</td>
-          <td>${locationObject.collisionData.sideOfHighway != undefined ? locationObject.collisionData.sideOfHighway : ""}</td>
-          <td>${locationObject.collisionData.ir != undefined ? locationObject.collisionData.ir : ""}</td></tr>
-        </table>
+    markup += `<div id="collisionData">
+      <h4>COLLISION DATA</h4>
+      <table id="collisionDataTable" class="row-1"><tr><th>REPORT #</th><th>Collision Date</th><th>Collision Type</th><th>NCIC</th><th>Officer ID</th><th>Assigned To</th><th>SOE Status</th><th>Location</th><th>District</th><th>County</th><th>Route</th><th>Route Suffix</th><th>PM Prefix</th><th>Postmile</th><th>R/L</th><th>Side of Hwy</th><th>I/R</th></tr>
+      <tr class="row-0"><td>${locationObject.collisionData.reportNumber != undefined ? locationObject.collisionData.reportNumber : ""}</td>
+      <td>${locationObject.collisionData.collisionDate != undefined ? locationObject.collisionData.collisionDate : ""}</td>
+      <td>${locationObject.collisionData.collisionType != undefined ? locationObject.collisionData.collisionType :""}</td>
+      <td>${locationObject.collisionData.ncic != undefined ? locationObject.collisionData.ncic : ""}</td>
+      <td>${locationObject.collisionData.officerId != undefined ? locationObject.collisionData.officerId : ""}</td>
+      <td>${locationObject.collisionData.assignedTo != undefined ? locationObject.collisionData.assignedTo : ""}</td>
+      <td>${locationObject.collisionData.soeStatus != undefined ? locationObject.collisionData.soeStatus : ""}</td>
+      <td>${locationObject.collisionData.locationCode != undefined ? locationObject.collisionData.location : ""}</td>
+      <td>${locationObject.collisionData.district != undefined ? locationObject.collisionData.district : ""}</td>
+      <td>${locationObject.collisionData.county != undefined ? locationObject.collisionData.county : ""}</td>
+      <td>${locationObject.collisionData.route != undefined ? locationObject.collisionData.route : ""}</td>
+      <td>${locationObject.collisionData.routeSuffix != undefined ? locationObject.collisionData.routeSuffix : ""}</td>
+      <td>${locationObject.collisionData.postmilePrefix != undefined ? locationObject.collisionData.postmilePrefix : ""}</td>
+      <td>${locationObject.collisionData.postmileValue != undefined ? locationObject.collisionData.postmileValue : ""}</td>
+      <td>${locationObject.collisionData.rl != undefined ? locationObject.collisionData.rl : ""}</td>
+      <td>${locationObject.collisionData.sideOfHighway != undefined ? locationObject.collisionData.sideOfHighway : ""}</td>
+      <td>${locationObject.collisionData.ir != undefined ? locationObject.collisionData.ir : ""}</td></tr>
+      </table>
       </div>`;
-  markup += `<div id="locationDiv">
+    markup += `<div id="locationDiv">
         <input type="text" class="location form-control" placeholder="Enter location" />
         <input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" />
         <input type="button" id="updateButton" value="Update!" class="btn btn-default" onclick="update()" />
-      </div>`;
+        </div>`;
 
-  generalContent.innerHTML = markup;
-  document.getElementsByClassName("mainContent")[0].style.height = "1070px";
+    generalContent.innerHTML = markup;
+    document.getElementsByClassName("mainContent")[0].style.height = "1070px";
 
-  if(locationsArray != undefined)
-    generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
-
-  if(locationObject.success) {
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " succeeded, with accuracy 0.99. View or modify the location below.";
     initMap(locationObject.collisionData);
     document.getElementsByClassName("location")[0].value = locationObject.collisionData.postmileValue;
     addMarker(locationObject.collisionData);
+    
+    if(locationsArray != undefined)
+      generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
   }
   else
-    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " failed. Please enter the location below.";
+    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1) + " failed. Please check the file.";
 }
 
 //Render list view.
@@ -221,9 +219,10 @@ function loadList(locationsObject, message) {
   for(var i = 0; i<locationsObject.tcrResults.length; i++) {
     var locationObject = locationsObject.tcrResults[i];
     var statusMessage = locationObject.success ? "Success" : "Failed";
-    //var locationObject = locationsObject.locations[i],
     if(locationObject.success)
-      newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
+      newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1)+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
+    else
+      newContent += "<tr class='row-"+(i%2)+"'><td>"+locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1)+"</td><td></td><td>0</td><td>"+statusMessage+"</td><td></td></tr>";
   }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
