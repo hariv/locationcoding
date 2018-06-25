@@ -27,8 +27,11 @@ function initMap(location) {
 function poll(batchId) {
   console.log("polling..");
   makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
+    var percentDone = response.numProcessed/response.numTcrs * 100;
+    document.getElementById("statusDiv").innerHTML = "Processing "+response.numTcrs+ " file(s). "+ percentDone +"% done.";
+    loadSpinner();
     console.log(response);
-    if(response.tcrResults && response.numTcrs == response.tcrResults.length) {
+    if(response.tcrResults && response.numTcrs == response.numProcessed) {
       if(response.numProcessed == 1)
         loadSingleLocation(response.tcrResults[0]);
       else
@@ -61,6 +64,15 @@ function makeRequest(requestType, endpoint, data, callback) {
     xhr.send();
 }
 
+function loadSpinner() {
+  var spinner = document.createElement("img");
+  spinner.src = "./images/spinner.gif";
+  spinner.height = "20";
+  spinner.width = "20";
+  document.getElementById("statusDiv").appendChild(spinner);
+  return;
+}
+
 //upload one or more TCRs to server.
 function upload(uploadObj) {
   var inputTag = document.getElementById(uploadObj.type);
@@ -73,13 +85,8 @@ function upload(uploadObj) {
       return;
     }
 
-    document.getElementById("statusDiv").innerHTML = "Processing "+inputTag.files.length+ " file(s)";
-    var spinner = document.createElement("img");
-    spinner.src = "./images/spinner.gif";
-    spinner.height = "20";
-    spinner.width = "20";
-
-    document.getElementById("statusDiv").appendChild(spinner);
+    document.getElementById("statusDiv").innerHTML = "Processing "+inputTag.files.length+ " file(s). 0% done.";
+    loadSpinner();
     document.getElementById("generalContent").innerHTML = "";
 
     var formData = new FormData(), i;
@@ -200,7 +207,6 @@ function loadSingleLocation(locationObject, locationsArray) {
 
 //Render list view.
 function loadList(locationsObject, message) {
-  console.log("listing");
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "none";
   //document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";
@@ -213,7 +219,7 @@ function loadList(locationsObject, message) {
   
   for(var i = 0; i<locationsObject.tcrResults.length; i++) {
     var locationObject = locationsObject.tcrResults[i];
-    var statusMessage = locationObject.success ? "Failed" : "Success";
+    var statusMessage = locationObject.success ? "Success" : "Failed";
     //var locationObject = locationsObject.locations[i], 
     newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
   }
