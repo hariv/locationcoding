@@ -1,5 +1,6 @@
 var origin, map;
 
+//Initialize the map.
 function initMap(location) {
   if(!location) {
     location = "Academic Surge UC Davis"
@@ -22,6 +23,7 @@ function initMap(location) {
 
 }
 
+//Polling function to get status of TCR
 function poll(batchId) {
   console.log("polling..");
   makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
@@ -36,6 +38,7 @@ function poll(batchId) {
   });
 }
 
+//Generic function to make ajax call
 function makeRequest(requestType, endpoint, data, callback) {
   var xhr = new XMLHttpRequest();
   var url = "http://169.237.117.27:8005/tcrservlets/"+endpoint;
@@ -57,6 +60,7 @@ function makeRequest(requestType, endpoint, data, callback) {
     xhr.send();
 }
 
+//upload one or more TCRs to server.
 function upload(uploadObj) {
   var inputTag = document.getElementById(uploadObj.type);
   if('files' in inputTag) {
@@ -90,10 +94,12 @@ function upload(uploadObj) {
   }
 }
 
+//Utility function for display.
 function show(entity) {
   return entity == undefined ? "" : entity;
 }
 
+//Event handler to edit TCR report data.
 function handleKeyDown(event, editItemId) {
   if(event.keyCode == 13) {
     var ip = document.getElementById(editItemId+"edit").value;
@@ -103,6 +109,7 @@ function handleKeyDown(event, editItemId) {
   return;
 }
 
+//Function to render edit screen as opposed to view screen.
 function showEditPage(editItemId) {
   var editItem = document.getElementById(editItemId);
   var content = editItem.innerHTML;
@@ -117,6 +124,7 @@ function showEditPage(editItemId) {
   document.getElementById("updateButton").style.display = "block";
 }
 
+//Function to delete TCR.
 function delete(locationObject, locationsArray) {
   var deleteIndex = locationsArray.findIndex(x => x.collisionData.reportNumber == locationObject.collisionData.reportNumber);
   locationsArray.splice(deleteIndex, 1);
@@ -133,6 +141,7 @@ function delete(locationObject, locationsArray) {
 
 }*/
 
+//Render single view.
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
   document.getElementById("map").style.display = "block";
@@ -188,6 +197,7 @@ function loadSingleLocation(locationObject, locationsArray) {
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " failed. Please enter the location below.";
 }
 
+//Render list view.
 function loadList(locationsObject, message) {
   console.log("listing");
   var generalContent = document.getElementById("generalContent");
@@ -209,7 +219,7 @@ function loadList(locationsObject, message) {
   newContent += "</table>";
   generalContent.innerHTML = newContent;
 }
-
+//Function to add marker on map.
 function addMarker(location) {
   var position, marker;
   var position = {lat: parseFloat(location.latitude), lng: parseFloat(location.longitude)};
@@ -222,7 +232,7 @@ function addMarker(location) {
     map: map
   });
 }
-
+//Function to enter location and see it on the map.
 function visualize() {
   var location = document.getElementsByClassName("location")[0].value;
   document.getElementById("updateButton").style.display = "block";
