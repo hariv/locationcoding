@@ -141,6 +141,16 @@ ul#collisionDataMenu li {
 	background-color: #F8F8FF
 }
 
+#errorDiv {
+	padding-top: 30px;
+	padding-left: 300px;
+	font-weight: bold;
+}
 .row-0 {
 	background-color: #F0FFF0;
+}
+
+span {
+	font-weight: bold;
+	font-size: 20px;
 }

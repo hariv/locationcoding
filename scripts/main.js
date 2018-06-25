@@ -153,8 +153,8 @@ function showEditPage(editItemId) {
 //Render single view.
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
+
   if(locationObject.success) {
-    document.getElementById("map").style.display = "block";
     markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
     for(var i = 0; i<locationObject.partyData.length; i++) {
       var partyObject = locationObject.partyData[i];
@@ -183,19 +183,27 @@ function loadSingleLocation(locationObject, locationsArray) {
       <td>${locationObject.collisionData.ir != undefined ? locationObject.collisionData.ir : ""}</td></tr>
       </table>
       </div>`;
-    markup += `<div id="locationDiv">
+    if(locationObject.collisionData.latitude != "0" && locationObject.collisionData.longitude != "0") {
+      document.getElementById("map").style.display = "block";
+      markup += `<div id="locationDiv">
         <input type="text" class="location form-control" placeholder="Enter location" />
         <input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" />
         <input type="button" id="updateButton" value="Update!" class="btn btn-default" onclick="update()" />
         </div>`;
+      generalContent.innerHTML = markup;
+      initMap(locationObject.collisionData);
+      document.getElementsByClassName("location")[0].value = locationObject.collisionData.postmileValue;
+      addMarker(locationObject.collisionData);    
+    }
 
-    generalContent.innerHTML = markup;
+    else {
+      markup += `<div id = "errorDiv">Unable to get exact location. Feature still a work in progress.</div>`;
+      generalContent.innerHTML = markup;
+    }
+
+    
     document.getElementsByClassName("mainContent")[0].style.height = "1070px";
-
-    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " succeeded, with score " + locationObject.collisionData.arashScore + ". View or modify the location below.";
-    initMap(locationObject.collisionData);
-    document.getElementsByClassName("location")[0].value = locationObject.collisionData.postmileValue;
-    addMarker(locationObject.collisionData);
+    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1) + " succeeded, with score " + locationObject.collisionData.arashScore + ". View or modify the content below.";
     
     if(locationsArray != undefined)
       generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
@@ -208,7 +216,7 @@ function loadSingleLocation(locationObject, locationsArray) {
 function loadList(locationsObject, message) {
   var generalContent = document.getElementById("generalContent");
   document.getElementById("map").style.display = "none";
-  //document.getElementById("statusDiv").innerHTML = locationsObject.successLength+locationsObject.faliureLength +" files uploaded. <br />"+ locationsObject.successLength + " files parsed successfully. <br />"+locationsObject.faliureLength+" files failed. <br /> Double click row to view/edit location.";
+
   if(!message)
     document.getElementById("statusDiv").innerHTML = "Double click row to view/edit location.";
   else
