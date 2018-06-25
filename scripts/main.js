@@ -27,7 +27,7 @@ function initMap(location) {
 function poll(batchId) {
   console.log("polling..");
   makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
-    var percentDone = response.numProcessed/response.numTcrs * 100;
+    var percentDone = Math.round(response.numProcessed/response.numTcrs * 100);
     document.getElementById("statusDiv").innerHTML = "Processing "+response.numTcrs+ " file(s). "+ percentDone +"% done.";
     loadSpinner();
     console.log(response);
@@ -64,6 +64,7 @@ function makeRequest(requestType, endpoint, data, callback) {
     xhr.send();
 }
 
+//function to show spinner.
 function loadSpinner() {
   var spinner = document.createElement("img");
   spinner.src = "./images/spinner.gif";
@@ -220,8 +221,9 @@ function loadList(locationsObject, message) {
   for(var i = 0; i<locationsObject.tcrResults.length; i++) {
     var locationObject = locationsObject.tcrResults[i];
     var statusMessage = locationObject.success ? "Success" : "Failed";
-    //var locationObject = locationsObject.locations[i], 
-    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
+    //var locationObject = locationsObject.locations[i],
+    if(locationObject.success)
+      newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.collisionData.reportNumber+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
   }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
