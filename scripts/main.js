@@ -95,11 +95,6 @@ function upload(uploadObj) {
       formData.append('tcrfiles', inputTag.files[i]);
     
     makeRequest("POST","batchSubmit",formData,null);
-    
-    /*if(uploadObj.type == "folderUpload")
-      setTimeout(function(){ loadList({successLength: 5, faliureLength: 0, locations:[{success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "2.pdf", accuracy: 0.92, location: "Academic Surge UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "3.pdf", accuracy: 0.95, location: "Wellman Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "4.pdf", accuracy: 0.91, location: "Watershed Sciences UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}, {success: true, fileName: "5.pdf", accuracy: 0.97, location: "320 K Street Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]}]});}, 1000);
-    else
-      setTimeout(function(){ loadSingleLocation({success: true, fileName: "1.pdf", accuracy: 0.99, location: "Kemper Hall UC Davis", reportId: "9320-2016-1887", collisionDate: "01/20/16", collisionType: "C - Rear End", ncic: 9320, officerId: 016970, assignedTo: "TRPSLEDG", soeStatus: "NEW", locationCode: "H", district: 04, county: "CC", route: "080", postMile: "009.530", sideOfHighway: "W", partyData: [{party: 1, primaryObject: "V2", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}, {party: 2, primaryObject: "V1", loc: "E", otherObject1: "*", vehHwyIndicator: 1, partyType: "A", movement: "B", direction: "W"}]});}, 1000);*/
   }
 }
 
@@ -205,8 +200,10 @@ function loadSingleLocation(locationObject, locationsArray) {
     document.getElementsByClassName("mainContent")[0].style.height = "1070px";
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1) + " succeeded, with score " + locationObject.collisionData.arashScore + ". View or modify the content below.";
     
-    if(locationsArray != undefined)
+    if(locationsArray != undefined) {
+      document.getElementsByClassName("mainContent")[0].style.removeProperty("height");
       generalContent.innerHTML += "<span onmouseover='' style='cursor: pointer;' onclick='loadList("+JSON.stringify(locationsArray)+")'>Go back to report list.</span>";
+    }
   }
   else
     document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1) + " failed. Please check the file.";
@@ -214,23 +211,21 @@ function loadSingleLocation(locationObject, locationsArray) {
 
 //Render list view.
 function loadList(locationsObject, message) {
+
   var generalContent = document.getElementById("generalContent");
+  var success = locationsObject.tcrResults.filter(locationObject => locationObject.success);
+  var failure = locationsObject.tcrResults.filter(locationObject => !(locationObject.success));
   document.getElementById("map").style.display = "none";
-
-  if(!message)
-    document.getElementById("statusDiv").innerHTML = "Double click row to view/edit location.";
-  else
-    document.getElementById("statusDiv").innerHTML = message;
-
+  document.getElementById("statusDiv").innerHTML = "Processing of "+success.length+ " TCRs succeeded and "+failure.length +" TCRs failed. Double click TCR to see more detailed results.";
   var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Score</th><th>Status</th><th></th></tr>";
-  
-  for(var i = 0; i<locationsObject.tcrResults.length; i++) {
-    var locationObject = locationsObject.tcrResults[i];
-    var statusMessage = locationObject.success ? "Success" : "Failed";
-    if(locationObject.success)
-      newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1)+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+locationObject.collisionData.arashScore+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
-    else
-      newContent += "<tr class='row-"+(i%2)+"'><td>"+locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1)+"</td><td></td><td>0</td><td>"+statusMessage+"</td><td></td></tr>";
+  for (var i = 0;i<success.length;i++) {
+    var successObject = success[i];
+    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(successObject)+","+JSON.stringify(locationsObject)+")'><td>"+successObject.filename.substring(successObject.filename.lastIndexOf("/")+1)+"</td><td>"+successObject.collisionData.postmileValue+"</td><td>"+successObject.collisionData.arashScore+"</td><td>"+"SUCCESS"+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
+  }
+
+  for(var i = 0;i<failure.length;i++) {
+    var failureObject = failure[i];
+    newContent += "<tr class='row-"+(i%2)+"'><td>"+failureObject.filename.substring(failureObject.filename.lastIndexOf("/")+1)+"</td><td></td><td>0</td><td>"+"FAILED"+"</td><td></td></tr>";
   }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
