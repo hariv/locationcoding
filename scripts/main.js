@@ -192,7 +192,7 @@ function loadSingleLocation(locationObject, locationsArray) {
     generalContent.innerHTML = markup;
     document.getElementsByClassName("mainContent")[0].style.height = "1070px";
 
-    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " succeeded, with accuracy 0.99. View or modify the location below.";
+    document.getElementById("statusDiv").innerHTML = "Processing of " + locationObject.collisionData.reportNumber + " succeeded, with score " + locationObject.collisionData.arashScore + ". View or modify the location below.";
     initMap(locationObject.collisionData);
     document.getElementsByClassName("location")[0].value = locationObject.collisionData.postmileValue;
     addMarker(locationObject.collisionData);
@@ -214,13 +214,13 @@ function loadList(locationsObject, message) {
   else
     document.getElementById("statusDiv").innerHTML = message;
 
-  var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Accuracy</th><th>Status</th><th></th></tr>";
+  var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Score</th><th>Status</th><th></th></tr>";
   
   for(var i = 0; i<locationsObject.tcrResults.length; i++) {
     var locationObject = locationsObject.tcrResults[i];
     var statusMessage = locationObject.success ? "Success" : "Failed";
     if(locationObject.success)
-      newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1)+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+"0.99"+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
+      newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(locationObject)+","+JSON.stringify(locationsObject)+")'><td>"+locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1)+"</td><td>"+locationObject.collisionData.postmileValue+"</td><td>"+locationObject.collisionData.arashScore+"</td><td>"+statusMessage+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
     else
       newContent += "<tr class='row-"+(i%2)+"'><td>"+locationObject.filename.substring(locationObject.filename.lastIndexOf("/")+1)+"</td><td></td><td>0</td><td>"+statusMessage+"</td><td></td></tr>";
   }
