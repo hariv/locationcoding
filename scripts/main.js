@@ -145,6 +145,10 @@ function showEditPage(editItemId) {
 
 }*/
 
+function update() {
+
+}
+
 //Render single view.
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
@@ -183,12 +187,12 @@ function loadSingleLocation(locationObject, locationsArray) {
       markup += `<div id="locationDiv">
         <input type="text" class="location form-control" placeholder="Enter location" />
         <input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" />
-        <input type="button" id="updateButton" value="Update!" class="btn btn-default" onclick="update()" />
+        <input type="button" id="updateButton" value="Update!" class="btn btn-default" data-toggle="modal" data-target="#updateModal" />
         </div>`;
       generalContent.innerHTML = markup;
       initMap(locationObject.collisionData);
       document.getElementsByClassName("location")[0].value = locationObject.collisionData.postmileValue;
-      addMarker(locationObject.collisionData);    
+      addMarker(locationObject.collisionData);
     }
 
     else {
@@ -230,6 +234,7 @@ function loadList(locationsObject, message) {
   newContent += "</table>";
   generalContent.innerHTML = newContent;
 }
+
 //Function to add marker on map.
 function addMarker(location) {
   var position, marker;
