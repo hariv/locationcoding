@@ -217,15 +217,15 @@ function loadList(locationsObject, message) {
   var failure = locationsObject.tcrResults.filter(locationObject => !(locationObject.success));
   document.getElementById("map").style.display = "none";
   document.getElementById("statusDiv").innerHTML = "Processing of "+success.length+ " TCRs succeeded and "+failure.length +" TCRs failed. Double click TCR to see more detailed results.";
-  var newContent = "<table class='table table-striped'><tr class='row-1'><th>File Name</th><th>Location</th><th>Score</th><th>Status</th><th></th></tr>";
+  var newContent = "<table class='table table-striped'><tr class='row-1'><th>S.No</th><th>File Name</th><th>Location</th><th>Score</th><th>Status</th><th></th></tr>";
   for (var i = 0;i<success.length;i++) {
     var successObject = success[i];
-    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(successObject)+","+JSON.stringify(locationsObject)+")'><td>"+successObject.filename.substring(successObject.filename.lastIndexOf("/")+1)+"</td><td>"+successObject.collisionData.postmileValue+"</td><td>"+successObject.collisionData.arashScore+"</td><td>"+"SUCCESS"+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
+    newContent += "<tr class='row-"+(i%2)+"' ondblclick='loadSingleLocation("+JSON.stringify(successObject)+","+JSON.stringify(locationsObject)+")'><td>"+(i+1)+"</td><td>"+successObject.filename.substring(successObject.filename.lastIndexOf("/")+1)+"</td><td>"+successObject.collisionData.postmileValue+"</td><td>"+successObject.collisionData.arashScore+"</td><td>"+"SUCCESS"+"</td><td><button class='btn btn-danger deleteButton' data-toggle='modal' data-target='#confirmDialog'>X</button></td></tr>";
   }
 
   for(var i = 0;i<failure.length;i++) {
     var failureObject = failure[i];
-    newContent += "<tr class='row-"+(i%2)+"'><td>"+failureObject.filename.substring(failureObject.filename.lastIndexOf("/")+1)+"</td><td></td><td>0</td><td>"+"FAILED"+"</td><td></td></tr>";
+    newContent += "<tr class='row-"+(i%2)+"'><td>"+(i+success.length)+"</td><td>"+failureObject.filename.substring(failureObject.filename.lastIndexOf("/")+1)+"</td><td></td><td>0</td><td>"+"FAILED"+"</td><td></td></tr>";
   }
   newContent += "</table>";
   generalContent.innerHTML = newContent;
