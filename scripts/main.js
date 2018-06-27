@@ -202,7 +202,9 @@ function update() {
   console.log(locationObject);
   console.log("Model Object");
   console.log(modelObject);
-  makeRequest("POST", "tcrUpdate", serverObject, function(response) {
+  delete serverObject.collisionData.__proto__;
+  delete serverObject.partyData.__proto__;
+  makeRequest("POST", "tcrUpdate", {tcrId: serverObject.tcrId, collisionData: serverObject.collisionData, partyData: serverObject.partyData}, function(response) {
     if(response.success)
       loadSingleLocation(locationObject, locationsArray);
     else {
