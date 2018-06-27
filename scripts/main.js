@@ -155,9 +155,11 @@ function update() {
   var locationsArray = document.getElementById("modal-array").innerHTML;
   var locationObject = modelObject;
   var collisionTableData = collisionTable.childNodes[0].childNodes[2];
+  var serverCollisionFields = ["collisionId", "reportNumber", "collisionDate", "collisionType", "ncic", "officerId", "assignedTo", "soeStatus", "location", "district", "county", "route", "routeSuffix", "postmilePrefix", "postmileValue", "alignment", "sideOfHighway", "intersectionOrRamp", "latitude" , "longitude"];
+  var serverPartyFields = ["partyId", "partyNumber", "primaryObject", "primaryLoc", "other1Object", "other1Loc", "other2Object", "other2Loc", "other3Object", "other3Loc", "vhi", "partyType", "movement", "direction"];
   var collisionFields = ["reportNumber","collisionData","collisionType","ncic","officerId","assignedTo","soeStatus","locationCode","district","county","route","routeSuffix","postmilePrefix","postmileValue","rl","sideOfHighway","ir"];
   for(var i=0;i<collisionFields.length;i++) {
-    if(collisionFields[i] === "latitude" || collisionFields[i] === "longitude" || collisionFields[i] === "postmileValue")
+    if(collisionFields[i] === "postmileValue")
       locationObject.collisionData[collisionFields[i]] = parseFloat(collisionTableData.children[i].innerHTML);
     else
       locationObject.collisionData[collisionFields[i]] = collisionTableData.children[i].innerHTML;
@@ -175,12 +177,32 @@ function update() {
   }
 
   locationObject.collisionData.collisionId = parseInt(locationObject.collisionData.collisionId);
+  locationObject.collisionData.district = locationObject.collisionData.district === "" ? null : parseInt(locationObject.collisionData.district);
+  locationObject.collisionData.route = locationObject.collisionData.route === "" ? null : parseInt(locationObject.collisionData.route);
+  locationObject.collisionData.latitude = locationObject.collisionData.latitude === "" ? null : parseFloat(locationObject.collisionData.latitude);
+  locationObject.collisionData.longitude = locationObject.collisionData.longitude === "" ? null : parseFloat(locationObject.collisionData.longitude);
+  
+  var serverObject = {};
+  serverObject.tcrId = modelObject.tcrId;
+  serverObject.collisionData = {};
+  serverObject.partyData = [];
+  for(var i=0;i<serverCollisionFields.length;i++)
+    serverObject.collisionData[serverCollisionFields[i]] = locationObject.collisionData[serverCollisionFields[i]];
+
+  for(var i=0;i<locationObject.partyData.length;i++) {
+    var partyObject = {};
+    for(var j=0;j<serverPartyFields.length;j++)
+      partyObject[serverPartyFields[j]] = locationObject.partyData[i][serverPartyFields[j]];
+    serverObject.partyData.push(partyObject);
+  }
+
+  serverObject.collisionData.alignment = serverObject.collisionData.alignment == null ? "" : serverObject.collisionData.alignment; 
   modelObject = JSON.parse(document.getElementById("modal-data").innerHTML);
   console.log("Location Object");
   console.log(locationObject);
   console.log("Model Object");
   console.log(modelObject);
-  makeRequest("POST", "tcrUpdate", {tcrId: modelObject.tcrId, collisionData: locationObject.collisionData, partyData: locationObject.partyData}, function(response) {
+  makeRequest("POST", "tcrUpdate", serverObject, function(response) {
     if(response.success)
       loadSingleLocation(locationObject, locationsArray);
     else {
