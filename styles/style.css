@@ -141,6 +141,11 @@ ul#collisionDataMenu li {
 	background-color: #F8F8FF
 }
 
+.edit-field{
+	width: 100px;
+	height: 30px;
+}
+
 #errorDiv {
 	padding-top: 30px;
 	padding-left: 300px;

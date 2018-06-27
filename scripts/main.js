@@ -109,6 +109,7 @@ function handleKeyDown(event, editItemId) {
     var ip = document.getElementById(editItemId+"edit").value;
     var element = document.getElementById(editItemId);
     element.innerHTML = ip;
+    document.getElementById("updateButton").style.display = "block";
   }
   return;
 }
@@ -121,11 +122,11 @@ function showEditPage(editItemId) {
   var editField = document.createElement("input");
   editField.setAttribute("type", "text");
   editField.id = editItemId+"edit";
-  editField.setAttribute("class", "form-control");
+  editField.setAttribute("class", "form-control edit-field");
   editField.setAttribute("value", content);
   editField.setAttribute("onkeydown", "handleKeyDown(event,'"+editItemId+"')");
   editItem.appendChild(editField);
-  document.getElementById("updateButton").style.display = "block";
+  document.getElementById("updateButton").style.display = "none";
 }
 
 //Function to delete TCR.
@@ -146,7 +147,13 @@ function showEditPage(editItemId) {
 }*/
 
 function update() {
-
+  var locationObject = {}, collisionTable = document.getElementById("collisionDataTable");
+  locationObject.collisionData = {};
+  var tableData = collisionTable.childNodes[0].childNodes[2];
+  var collisionFields = ["reportNumber","collisionData","collisionType","ncic","officerId","assignedTo","soeStatus","locationCode","district","county","route","routeSuffix","postmilePrefix","postmileValue","rl","sideOfHighway","ir"];
+  for(var i=0;i<collisionFields.length;i++)
+    locationObject.collisionData[collisionFields[i]] = tableData.children[i].innerHTML;
+  console.log(locationObject);
 }
 
 //Render single view.
@@ -163,23 +170,23 @@ function loadSingleLocation(locationObject, locationsArray) {
     markup += `<div id="collisionData">
       <h4>COLLISION DATA</h4>
       <table id="collisionDataTable" class="row-1"><tr><th>REPORT #</th><th>Collision Date</th><th>Collision Type</th><th>NCIC</th><th>Officer ID</th><th>Assigned To</th><th>SOE Status</th><th>Location</th><th>District</th><th>County</th><th>Route</th><th>Route Suffix</th><th>PM Prefix</th><th>Postmile</th><th>R/L</th><th>Side of Hwy</th><th>I/R</th></tr>
-      <tr class="row-0"><td>${locationObject.collisionData.reportNumber != undefined ? locationObject.collisionData.reportNumber : ""}</td>
-      <td>${locationObject.collisionData.collisionDate != undefined ? locationObject.collisionData.collisionDate : ""}</td>
-      <td>${locationObject.collisionData.collisionType != undefined ? locationObject.collisionData.collisionType :""}</td>
-      <td>${locationObject.collisionData.ncic != undefined ? locationObject.collisionData.ncic : ""}</td>
-      <td>${locationObject.collisionData.officerId != undefined ? locationObject.collisionData.officerId : ""}</td>
-      <td>${locationObject.collisionData.assignedTo != undefined ? locationObject.collisionData.assignedTo : ""}</td>
-      <td>${locationObject.collisionData.soeStatus != undefined ? locationObject.collisionData.soeStatus : ""}</td>
-      <td>${locationObject.collisionData.locationCode != undefined ? locationObject.collisionData.location : ""}</td>
-      <td>${locationObject.collisionData.district != undefined ? locationObject.collisionData.district : ""}</td>
-      <td>${locationObject.collisionData.county != undefined ? locationObject.collisionData.county : ""}</td>
-      <td>${locationObject.collisionData.route != undefined ? locationObject.collisionData.route : ""}</td>
-      <td>${locationObject.collisionData.routeSuffix != undefined ? locationObject.collisionData.routeSuffix : ""}</td>
-      <td>${locationObject.collisionData.postmilePrefix != undefined ? locationObject.collisionData.postmilePrefix : ""}</td>
-      <td>${locationObject.collisionData.postmileValue != undefined ? locationObject.collisionData.postmileValue : ""}</td>
-      <td>${locationObject.collisionData.rl != undefined ? locationObject.collisionData.rl : ""}</td>
-      <td>${locationObject.collisionData.sideOfHighway != undefined ? locationObject.collisionData.sideOfHighway : ""}</td>
-      <td>${locationObject.collisionData.ir != undefined ? locationObject.collisionData.ir : ""}</td></tr>
+      <tr class="row-0"><td id="reportNumber" ondblclick="showEditPage('reportNumber')">${locationObject.collisionData.reportNumber != undefined ? locationObject.collisionData.reportNumber : ""}</td>
+      <td id="collisionDate" ondblclick="showEditPage('collisionDate')">${locationObject.collisionData.collisionDate != undefined ? locationObject.collisionData.collisionDate : ""}</td>
+      <td id="collisionType" ondblclick="showEditPage('collisionType')">${locationObject.collisionData.collisionType != undefined ? locationObject.collisionData.collisionType :""}</td>
+      <td id="ncic" ondblclick="showEditPage('ncic')">${locationObject.collisionData.ncic != undefined ? locationObject.collisionData.ncic : ""}</td>
+      <td id="officerId" ondblclick="showEditPage('officerId')">${locationObject.collisionData.officerId != undefined ? locationObject.collisionData.officerId : ""}</td>
+      <td id="assignedTo" ondblclick="showEditPage('assignedTo')">${locationObject.collisionData.assignedTo != undefined ? locationObject.collisionData.assignedTo : ""}</td>
+      <td id="soeStatus" ondblclick="showEditPage('soeStatus')">${locationObject.collisionData.soeStatus != undefined ? locationObject.collisionData.soeStatus : ""}</td>
+      <td id="locationCode" ondblclick="showEditPage('locationCode')">${locationObject.collisionData.locationCode != undefined ? locationObject.collisionData.location : ""}</td>
+      <td id="district" ondblclick="showEditPage('district')">${locationObject.collisionData.district != undefined ? locationObject.collisionData.district : ""}</td>
+      <td id="county" ondblclick="showEditPage('county')">${locationObject.collisionData.county != undefined ? locationObject.collisionData.county : ""}</td>
+      <td id="route" ondblclick="showEditPage('route')">${locationObject.collisionData.route != undefined ? locationObject.collisionData.route : ""}</td>
+      <td id="routeSuffix" ondblclick="showEditPage('routeSuffix')">${locationObject.collisionData.routeSuffix != undefined ? locationObject.collisionData.routeSuffix : ""}</td>
+      <td id="postmilePrefix" ondblclick="showEditPage('postmilePrefix')">${locationObject.collisionData.postmilePrefix != undefined ? locationObject.collisionData.postmilePrefix : ""}</td>
+      <td id="postmileValue" ondblclick="showEditPage('postmileValue')">${locationObject.collisionData.postmileValue != undefined ? locationObject.collisionData.postmileValue : ""}</td>
+      <td id="rl" ondblclick="showEditPage('rl')">${locationObject.collisionData.rl != undefined ? locationObject.collisionData.rl : ""}</td>
+      <td id="sideOfHighway" ondblclick="showEditPage('sideOfHighway')">${locationObject.collisionData.sideOfHighway != undefined ? locationObject.collisionData.sideOfHighway : ""}</td>
+      <td id="ir" ondblclick="showEditPage('ir')">${locationObject.collisionData.ir != undefined ? locationObject.collisionData.ir : ""}</td></tr>
       </table>
       </div>`;
     if(locationObject.collisionData.latitude != "0" && locationObject.collisionData.longitude != "0") {
