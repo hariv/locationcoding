@@ -58,8 +58,11 @@ function makeRequest(requestType, endpoint, data, callback) {
         callback(response);
     }
   }
-  if(data != undefined)
+  if(data != undefined) {
+    console.log("data");
+    console.log(data);
     xhr.send(data);
+  }
   else
     xhr.send();
 }
@@ -147,21 +150,54 @@ function showEditPage(editItemId) {
 }*/
 
 function update() {
-  var locationObject = {}, collisionTable = document.getElementById("collisionDataTable");
-  locationObject.collisionData = {};
-  var tableData = collisionTable.childNodes[0].childNodes[2];
+  var collisionTable = document.getElementById("collisionDataTable"), partyTable = document.getElementById("partyDataTable");
+  var modelObject = JSON.parse(document.getElementById("modal-data").innerHTML);
+  var locationsArray = document.getElementById("modal-array").innerHTML;
+  var locationObject = modelObject;
+  var collisionTableData = collisionTable.childNodes[0].childNodes[2];
   var collisionFields = ["reportNumber","collisionData","collisionType","ncic","officerId","assignedTo","soeStatus","locationCode","district","county","route","routeSuffix","postmilePrefix","postmileValue","rl","sideOfHighway","ir"];
-  for(var i=0;i<collisionFields.length;i++)
-    locationObject.collisionData[collisionFields[i]] = tableData.children[i].innerHTML;
+  for(var i=0;i<collisionFields.length;i++) {
+    if(collisionFields[i] === "latitude" || collisionFields[i] === "longitude" || collisionFields[i] === "postmileValue")
+      locationObject.collisionData[collisionFields[i]] = parseFloat(collisionTableData.children[i].innerHTML);
+    else
+      locationObject.collisionData[collisionFields[i]] = collisionTableData.children[i].innerHTML;
+  }
+
+  var partyTableData = partyTable.childNodes[0].childNodes;
+  var partyFields = ["partyNumber", "primaryObject", "primaryLoc", "other1Object", "other1Loc", "other2Object", "other2Loc", "other3Object", "other3Loc", "vhi", "partyType", "movement", "direction"];
+  for(var i=1;i<partyTableData.length;i++) {
+    for(var j=0;j<partyFields.length;j++) {
+      if(partyFields[j] === "vhi" || partyFields[j] === "partyNumber")
+        locationObject.partyData[i-1][partyFields[j]] = parseInt(partyTableData[i].children[j].innerHTML);
+      else
+        locationObject.partyData[i-1][partyFields[j]] = partyTableData[i].children[j].innerHTML;
+    }
+  }
+
+  locationObject.collisionData.collisionId = parseInt(locationObject.collisionData.collisionId);
+  modelObject = JSON.parse(document.getElementById("modal-data").innerHTML);
+  console.log("Location Object");
   console.log(locationObject);
+  console.log("Model Object");
+  console.log(modelObject);
+  makeRequest("POST", "tcrUpdate", {tcrId: modelObject.tcrId, collisionData: locationObject.collisionData, partyData: locationObject.partyData}, function(response) {
+    if(response.success)
+      loadSingleLocation(locationObject, locationsArray);
+    else {
+      loadSingleLocation(modelObject, locationsArray);
+    }
+  });
 }
 
 //Render single view.
 function loadSingleLocation(locationObject, locationsArray) {
   var generalContent = document.getElementById("generalContent"), markup;
-
+  var locationObjectClone = JSON.parse(JSON.stringify(locationObject));
+  document.getElementById("modal-data").innerHTML = JSON.stringify(locationObjectClone);
+  document.getElementById("modal-array").innerHTML = JSON.stringify(locationsArray);
+  
   if(locationObject.success) {
-    markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
+    markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table' id='partyDataTable'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
     for(var i = 0; i<locationObject.partyData.length; i++) {
       var partyObject = locationObject.partyData[i];
       markup += "<tr class='row-"+(i%2)+"'><td id='party-"+i+"' ondblclick='showEditPage(this.id)'>"+partyObject.partyNumber+"</td><td id='primaryObject-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.primaryObject)+"</td><td id='loc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.primaryLoc)+"</td><td id='firstOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other1Object)+"</td><td id='firstLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other1Loc)+"</td><td id='secondOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other2Object)+"</td><td id='secondLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other2Loc)+"</td><td id='thirdOtherObj-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other3Object)+"</td><td id='thirdLoc-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.other3Loc)+"</td><td id='hwyIndicator-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.vhi)+"</td><td id='partyType-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.partyType)+"</td><td id='movement-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.movement)+"</td><td id='direction-"+i+"' ondblclick='showEditPage(this.id)'>"+show(partyObject.direction)+"</td></tr>";
@@ -194,7 +230,7 @@ function loadSingleLocation(locationObject, locationsArray) {
       markup += `<div id="locationDiv">
         <input type="text" class="location form-control" placeholder="Enter location" />
         <input type="button" id="locationButton" value="Visualize!" class="btn btn-default" onclick="visualize()" />
-        <input type="button" id="updateButton" value="Update!" class="btn btn-default" data-toggle="modal" data-target="#updateModal" />
+        <input type="button" id="updateButton" value="Update!" class="btn btn-default" data-toggle="modal" data-target="#updateModal"/>
         </div>`;
       generalContent.innerHTML = markup;
       initMap(locationObject.collisionData);
