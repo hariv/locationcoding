@@ -26,6 +26,8 @@ function initMap(location) {
 //Polling function to get status of TCR
 function poll(batchId) {
   console.log("polling..");
+  console.log("Batch Id");
+  console.log(batchId);
   makeRequest("GET","batchStatus?batchId="+batchId, null, function(response){
     var percentDone = Math.round(response.numProcessed/response.numTcrs * 100);
     document.getElementById("statusDiv").innerHTML = "Processing "+response.numTcrs+ " file(s). "+ percentDone +"% done.";
@@ -221,6 +223,7 @@ function loadSingleLocation(locationObject, locationsArray) {
   document.getElementById("modal-array").innerHTML = JSON.stringify(locationsArray);
   
   if(locationObject.success) {
+    locationObject.partyData.sort(function(a,b){ return (a.partyNumber > b.partyNumber) ? 1 : -1;});
     markup = "<div id='partyData'><h4>PARTY DATA</h4><table class='table' id='partyDataTable'><tr class='row-1'><th>Party</th><th>Primary Object</th><th>Loc</th><th>Other 1 Object</th><th>Loc</th><th>Other 2 Object</th><th>Loc</th><th>Other 3 Object</th><th>Loc</th><th>Veh Hwy Indicator</th><th>Party Type</th><th>Movement</th><th>Direction</th></tr>";
     for(var i = 0; i<locationObject.partyData.length; i++) {
       var partyObject = locationObject.partyData[i];
@@ -249,7 +252,7 @@ function loadSingleLocation(locationObject, locationsArray) {
       <td id="ir" ondblclick="showEditPage('ir')">${locationObject.collisionData.ir != undefined ? locationObject.collisionData.ir : ""}</td></tr>
       </table>
       </div>`;
-    if(locationObject.collisionData.latitude != "0" && locationObject.collisionData.longitude != "0") {
+    if(locationObject.collisionData.latitude != null && locationObject.collisionData.longitude != null) {
       document.getElementById("map").style.display = "block";
       markup += `<div id="locationDiv">
         <input type="text" class="location form-control" placeholder="Enter location" />
