@@ -134,23 +134,7 @@ function showEditPage(editItemId) {
   document.getElementById("updateButton").style.display = "none";
 }
 
-//Function to delete TCR.
-/*function delete(locationObject, locationsArray) {
-  var deleteIndex = locationsArray.findIndex(x => x.collisionData.reportNumber == locationObject.collisionData.reportNumber);
-  locationsArray.splice(deleteIndex, 1);
-  makeRequest("DELETE", "delete", locationsArray, function(response){
-    if(response.error) {
-      document.getElementById("statusDiv").innerHTML = "Unable to delete report " + locationObject.collisionData.reportNumber ". Please try again later";
-      return;
-    }
-    loadList(locationsArray, "Successfully deleted "+locationObject.collisionData.reportNumber);
-  });
-}*/
-
-/*function openDeleteDialog(locationObject, locationsArray) {
-
-}*/
-
+// Function to interact with makeRequest to update server with user changes.
 function update() {
   var collisionTable = document.getElementById("collisionDataTable"), partyTable = document.getElementById("partyDataTable");
   var modelObject = JSON.parse(document.getElementById("modal-data").innerHTML);
@@ -200,10 +184,6 @@ function update() {
 
   serverObject.collisionData.alignment = serverObject.collisionData.alignment == null ? "" : serverObject.collisionData.alignment; 
   modelObject = JSON.parse(document.getElementById("modal-data").innerHTML);
-  console.log("Location Object");
-  console.log(locationObject);
-  console.log("Model Object");
-  console.log(modelObject);
   delete serverObject.collisionData.__proto__;
   delete serverObject.partyData.__proto__;
   makeRequest("POST", "tcrUpdate", {tcrId: serverObject.tcrId, collisionData: serverObject.collisionData, partyData: serverObject.partyData}, function(response) {
