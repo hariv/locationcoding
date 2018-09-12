@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <style>
+       #map {
+        position: absolute;
+        left: 715px;
+        top: 200px;
+        height: 400px;
+        width: 50%;
+       }
+    </style>
+  </head>
+  <body>
+    <div class = "container">
+      <div class = "jumbotron" style="position: absolute; left: 0px; width: 1476px;">
+        <h1 style="position: absolute; left: 600px;">Accident Hotspots</h1>    
+      </div>
+      <div id="map"></div>
+      <script type = "text/javascript" src = "jquery.min.js"></script>
+      <script type = "text/javascript" src = "popper.js"></script>
+      <script type = "text/javascript" src = "underscore.js"></script>
+      <script type = "text/javascript" src = "bootstrap.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+      <script type = "text/javascript" src = "main.js"></script>
+      <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdMiuBuuhft5I9Jwal7d14CZWAa9OHNfw&callback=initMap">
+      </script>
+      <div id = "locationDiv" style="position: absolute; left: 100px; top: 250px;" ng-app="caltrans" ng-controller="caltransController">
+        <div ng-repeat = "location in getLocations()">
+          <input type = "text" class = "location form-control" placeholder="Enter location" style="width:550px;" /><br />
+        </div>
+        <input type = "button" id = "locationButton" value = "Visualize!" ng-click = "visualize()" class="btn btn-primary" style="position: absolute; left: 200px;"/>
+      </div>
+    </div>
+  </body>
+</html>
