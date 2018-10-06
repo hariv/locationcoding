@@ -3,14 +3,14 @@ from typing import Tuple
 
 class TrieNode(object):
     
-    def __init__(self, char: str):
+    def __init__(self, char):
         self.char = char
         self.children = []
         self.word_finished = False
         self.counter = 1
     
 
-def add(root, word: str):
+def add(root, word):
     node = root
     for char in word:
         found_in_child = False
@@ -27,7 +27,7 @@ def add(root, word: str):
     node.word_finished = True
 
 
-def find_prefix(root, prefix: str) -> Tuple[bool, int]:
+def find_prefix(root, prefix) -> Tuple[bool, int]:
     node = root
     if not root.children:
         return False, 0
