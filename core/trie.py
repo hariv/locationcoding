@@ -1,6 +1,3 @@
-from typing import Tuple
-
-
 class TrieNode(object):
     
     def __init__(self, char):
@@ -27,7 +24,7 @@ def add(root, word):
     node.word_finished = True
 
 
-def find_prefix(root, prefix) -> Tuple[bool, int]:
+def find_prefix(root, prefix):
     node = root
     if not root.children:
         return False, 0
