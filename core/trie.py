@@ -42,10 +42,3 @@ def find_prefix(root, prefix):
 if __name__ == "__main__":
     root = TrieNode('*')
     add(root, "hackathon")
-    add(root, 'hack')
-
-    print(find_prefix(root, 'hac'))
-    print(find_prefix(root, 'hack'))
-    print(find_prefix(root, 'hackathon'))
-    print(find_prefix(root, 'ha'))
-    print(find_prefix(root, 'hammer'))
