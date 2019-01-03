@@ -41,4 +41,16 @@ def find_prefix(root, prefix):
 
 if __name__ == "__main__":
     root = TrieNode('*')
-    add(root, "hackathon")
+    add(root, "BEGIN OF COUNTY")
+    add(root, "GUALALA")
+    add(root, "NORTH LIMITS GUALALA")
+    add(root, "POINT ARENA SCL")
+    add(root, "POINT ARENA NCL")
+    add(root, "MANCHESTER")
+    add(root, "NORTH LIMITS ELK")
+    add(root, "ALBION")
+    add(root, "NORTH LIMITS CASPAR")
+    add(root, "VIA MAIN ST")
+
+    print(find_prefix(root, "NORTH LIMITS"))
+#add(root, "hackathon")
